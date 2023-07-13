@@ -1,5 +1,12 @@
+import './home.sass'
 import { useEffect, useState } from "react";
 import BeerCard from "../components/beer-card/Beer-cards";
+
+interface Beer {
+    image_url: string,
+    name: string,
+    description: string
+}
 
 const HomeScreen = (): JSX.Element => {
 
@@ -12,15 +19,15 @@ const HomeScreen = (): JSX.Element => {
             .then(data => setBeers(data))
     }, [])
 
-    const content = beers.map(beer => <li><BeerCard /></li> )
+    const content = beers.map((beer: Beer) => <li><BeerCard img={beer.image_url} name={beer.name} description={beer.description}/></li> )
 
     return (
-        <>
-            <ul>
+        <section className='beer-section'>
+            <h1 className='beer-section__title'>Our Beer: </h1>
+            <ul className="beer-section__cards">
                 {content}
             </ul>
-           
-        </>
+        </section>
     );
 };
 
