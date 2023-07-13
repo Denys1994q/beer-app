@@ -1,0 +1,28 @@
+@mixin respond($breakpoint)
+    @if $breakpoint == phoneM
+        @media (max-width: 400px)
+            @content
+
+    @if $breakpoint == phoneL
+        @media (max-width: 600px)
+            @content
+
+    @if $breakpoint == phoneXL
+        @media (max-width: 700px)
+            @content
+
+    @if $breakpoint == tab-port
+        @media (max-width: 900px)
+            @content
+
+    @if $breakpoint == tab-land
+        @media (max-width: 1200px)
+            @content
+
+    @if $breakpoint == laptopL
+        @media (max-width: 1400px)
+            @content
+
+    @if $breakpoint == big-screen
+        @media (min-width: 1800px)
+            @content
