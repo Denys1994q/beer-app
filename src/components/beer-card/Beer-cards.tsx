@@ -11,24 +11,35 @@ import Typography from "@mui/material/Typography";
 import { useBeerStore } from "../../store/store";
 import Box from "@mui/material/Box";
 
-interface BeerCardProps {
-    id: string;
-    img: string;
-    name: string;
-    description: string;
-    selected: boolean;
-    filterBeerList: any;
-    isShown: boolean
-}
+// interface BeerCardProps {
+//     id: string;
+//     img: string;
+//     name: string;
+//     description: string;
+//     selected: boolean;
+//     filterBeerList: any;
+//     isShown: boolean;
+//     first_brewed: string
+// }
 
-const BeerCard = ({ isShown, id, selected, img, name, description, filterBeerList }: BeerCardProps): JSX.Element => {
+const BeerCard = ({
+    id,
+    first_brewed,
+    selected,
+    image_url,
+    name,
+    description,
+    filterBeerList,
+}: any): JSX.Element => {
     return (
-        <div style={{display: isShown ? 'block' : 'none'}} className={selected ? "beerCard beerCard-active" : "beerCard"}>
-            <Card sx={{ maxWidth: 345, display: "flex", flexDirection: "column" }}>
+        <div
+            
+            className={selected ? "beerCard beerCard-active" : "beerCard"}>
+            <Card sx={{ maxWidth: 645, display: "flex", flexDirection: "column" }}>
                 <Box sx={{ display: "flex" }}>
                     <CardMedia
-                        sx={{ height: 200, width: 200, backgroundSize: "contain", margin: "1rem" }}
-                        image={img}
+                        sx={{ height: 300, width: 300, backgroundSize: "contain", margin: "1rem" }}
+                        image={image_url}
                         title='product-image'
                     />
                     <CardContent>
@@ -41,8 +52,15 @@ const BeerCard = ({ isShown, id, selected, img, name, description, filterBeerLis
                         <Typography
                             variant='h5'
                             color='text.secondary'>
-                            {description.length > 200 ? description.slice(0, 200) + "..." : description}
+                            {description.length > 300 ? description.slice(0, 300) + "..." : description}
                         </Typography>
+                        <Box sx={{marginTop: '10px'}}>
+                            <Typography
+                                variant='h5'
+                                color='text.secondary'>
+                                First brewed in {first_brewed}
+                            </Typography>
+                        </Box>
                     </CardContent>
                 </Box>
                 <Box sx={{ display: selected ? "flex" : "none", justifyContent: "end" }}>
