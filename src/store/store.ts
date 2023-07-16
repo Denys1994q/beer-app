@@ -17,7 +17,7 @@ interface BeerState {
             beerListRendered: [],
             setBeerList: (beersFromApi: any) => set((state: any) => ({ beerListAll: [...beersFromApi] })),
             setBeerListRendered: () => set((state: any) => ({ beerListRendered: state.beerListAll.slice(0,15) })),
-            filterBeerList: (filter: string) => set((state: any) => ({ beerListRendered: state.beerListRendered.filter((beer: any) => beer.id !== filter) })),
+            filterBeerList: (idArrToDel: string) => set((state: any) => ({ beerListRendered: state.beerListRendered.filter((beer: any) => idArrToDel.indexOf(beer.id) === -1 )})),
             addToBeerListRendered: (newBeers: any) => set((state: any) => ({ beerListRendered: [...state.beerListRendered, ...newBeers] })),
             })
     )   

@@ -3,6 +3,8 @@ import { useEffect, useState, MouseEvent, useRef, useCallback } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import BeerCard from "../components/beer-card/Beer-cards";
 import { useBeerStore } from "../store/store";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 
 // типи написати для beers і одного beer
 interface Beer {
@@ -74,37 +76,30 @@ const HomeScreen = (): JSX.Element => {
     // з них 15 перших показуємо, якщо менше 15 стає, додаємо з 10, які залишилися
     // якщо закінчилися 10, робимо запит на сторінку №2
 
-    // 25 айтемів зі сторінки 2 
+    // 25 айтемів зі сторінки 2
     // з них показуємо не 15, а додаємо скільки видалено
 
-    const [diff, setDiff] = useState(0);
+    // const [diff, setDiff] = useState(0);
     const [start, setStart] = useState(15);
     useEffect(() => {
-        // console.log(beerListRendered);
-        console.log("beerListAll", beerListAll);
         // якщо стало менше 15 товарів (юзер видалив якусь кількість )
         if (beerListRendered.length > 0 && beerListRendered.length < 15) {
-            console.log("less than 15");
-            // скільки товарів потрібно додати, щоб знову було 15
+            // скільки товарів потрібно додати, щоб знову було 15. Наприклад, видалив 3. 15-12=3
             const difference = 15 - beerListRendered.length;
-            // не треба робити +1, якщо beerItemsArrToAdd 0
-            let beerItemsArrToAdd: any = [];
+            setStart(old => old + difference)
 
-            setDiff(diff => diff + 1);
-           
-            // тут не 15 має бути! тільки перший раз 15
-            beerItemsArrToAdd = beerListAll
-                .filter((beer: any, index: number) => index >= start + diff)
+            // setDiff(diff => diff + selectedCards.length);
+
+            // масив товарів із поки невідрендерених, які потрібно додати до рендеру
+            // ! от чому start 15
+            const beerItemsArrToAdd = beerListAll
+                .filter((beer: any, index: number) => index >= start)
                 .slice(0, difference);
-            console.log('beerItemsArrToAdd', beerItemsArrToAdd)
             if (beerItemsArrToAdd.length > 0) {
                 addToBeerListRendered(beerItemsArrToAdd);
             } else {
-                setDiff(0)
-                // setBeerList([])
-                // все-таки треба beerListAll перезаписувати !
-                console.log("треба запит");
-                setStart(0)
+                // setDiff(0);
+                setStart(0);
                 setCurrentPage(old => old + 1);
             }
         }
@@ -117,7 +112,7 @@ const HomeScreen = (): JSX.Element => {
             fetch(`https://api.punkapi.com/v2/beers?page=${currentPage}`)
                 .then(res => res.json())
                 .then(data => {
-                    setBeerList(data); 
+                    setBeerList(data);
                 });
         }
     }, [currentPage]);
@@ -126,10 +121,8 @@ const HomeScreen = (): JSX.Element => {
         if (currentPage === 1) {
             return;
         }
-        // заяви раз запускаэ сетбірліст
-        setStart(old => old +1)
-        const beerItemsArrToAdd = beerListAll.filter((beer: any, index: number) => index >= start + diff).slice(0, 1);
-        // console.log(beerItemsArrToAdd)
+        setStart(old => old + 1);
+        const beerItemsArrToAdd = beerListAll.filter((beer: any, index: number) => index >= start).slice(0, 1);
         if (beerItemsArrToAdd.length > 0) {
             addToBeerListRendered(beerItemsArrToAdd);
         }
@@ -145,6 +138,14 @@ const HomeScreen = (): JSX.Element => {
             setSelectedCards(selectedCards.filter(card => card !== id));
         }
     };
+
+    // ф-ія для видалення картки
+    const remove = () => {
+        // ф-ія зі стору
+        filterBeerList(selectedCards)
+        // очищаємо список вибраних інпутів
+        setSelectedCards([])
+    }
 
     // спробувати без колбеку
     // useEffect(() => {
@@ -187,6 +188,7 @@ const HomeScreen = (): JSX.Element => {
             {beerListRendered.map((beer: Beer, index: number) => (
                 <li
                     // style={{ display: index < offset && index + 1 > offset - 5 ? "block" : "none" }}
+                    style={{maxWidth: 600}}
                     key={beer.id}
                     onClick={e => selectCard(e, beer.id)}>
                     <BeerCard
@@ -210,6 +212,24 @@ const HomeScreen = (): JSX.Element => {
                 content
                 // 1232343
             )}
+            <Box
+                sx={{
+                    display: selectedCards.length > 0 ? "flex" : "none",
+                    justifyContent: "center",
+                    position: "fixed",
+                    top: "20px",
+                    left: '50%',
+                    transform: 'translate(-50%)'
+                }}>
+                <Button
+                    variant='contained'
+                    size='medium'
+                    color='error'
+                    onClick={remove}
+                    sx={{ fontSize: 12 }}>
+                    Delete
+                </Button>
+            </Box>
             {/* пустий дів для скролу */}
             {/* <div ref={bottom}>{""}</div> */}
         </section>
