@@ -15,17 +15,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import FolderIcon from "@mui/icons-material/Folder";
 import Box from "@mui/material/Box";
 import SportsBarIcon from '@mui/icons-material/SportsBar';
+import { BeerItem } from "../../store/store";
 
-// interface BeerCardProps {
-//     id: string;
-//     img: string;
-//     name: string;
-//     description: string;
-//     selected: boolean;
-//     filterBeerList: any;
-//     isShown: boolean;
-//     first_brewed: string
-// }
+interface BeerCardProps extends BeerItem {
+    selected: boolean;
+}
 
 const BeerCard = ({
     id,
@@ -36,13 +30,12 @@ const BeerCard = ({
     image_url,
     name,
     description,
-    filterBeerList,
-}: any): JSX.Element => {
+}: BeerCardProps): JSX.Element => {
     return (
         <div className={selected ? "beerCard beerCard-active" : "beerCard"}>
             <h1>{id}</h1>
-            <Card sx={{  display: "inline-flex", flexDirection: "column" }}>
-                <Box sx={{ display: "flex" }}>
+            <Card sx={{  display: "flex", flexDirection: "column", height: '100%' }}>
+                <Box sx={{ display: "flex",  }}>
                     <CardMedia
                         sx={{ height: 400, width: 400, backgroundSize: "contain", margin: "1rem" }}
                         image={image_url}
@@ -64,7 +57,7 @@ const BeerCard = ({
                         <Typography
                             variant='h5'
                             color='text.secondary'>
-                            {description.length > 300 ? description.slice(0, 300) + "..." : description}
+                            {description.length > 200 ? description.slice(0, 200) + "..." : description}
                         </Typography>
                         <Box sx={{ marginTop: "10px" }}>
                             <Box sx={{ marginTop: "10px" }}>

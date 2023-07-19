@@ -1,43 +1,39 @@
 import { create } from 'zustand'
-import { devtools, persist } from 'zustand/middleware'
 import zukeeper from 'zukeeper'
 
-interface BeerState {
-    beerListAll: any,
-    beerListRendered: any,
-    setBeerList: (beers: any) => void,
-    filterBeerList: (filter: string) => void,
-    addToBeerListRendered: (beers: any) => void,
+export interface BeerItem {
+    id: string,
+    name: string,
+    tagline: string,
+    food_pairing: string[],
+    first_brewed: string,
+    image_url: string,
+    description: string,
 }
 
-  export const useBeerStore: any = create<BeerState>()( 
+interface BeerState {
+    // всі товари, з яких фільтрується список для товарів, які потрапляють в рендер
+    beerListAll: BeerItem[],
+    setBeerList: (beers: BeerItem[]) => void,
+    filterBeerListAll: (filter: string[]) => void,
+}
+
+  export const useBeerStore = create<BeerState>()( 
     zukeeper(
         (set: any) => ({
             beerListAll: [],
-            beerListRendered: [],
-            setBeerList: (beersFromApi: any) => set((state: any) => ({ beerListAll: [...beersFromApi] })),
-            setBeerListRendered: () => set((state: any) => ({ beerListRendered: state.beerListAll.slice(0,15) })),
-            filterBeerList: (idArrToDel: string) => set((state: any) => ({ beerListRendered: state.beerListRendered.filter((beer: any) => idArrToDel.indexOf(beer.id) === -1 )})),
-            addToBeerListRendered: (newBeers: any) => set((state: any) => ({ beerListRendered: [...state.beerListRendered, ...newBeers] })),
+            setBeerList: (beersFromApi: BeerState[], idArrToDel?: any) => set((state: BeerState) => {
+                console.log('idArrToDel', idArrToDel)
+                const data = [...state.beerListAll, ...beersFromApi]
+                console.log('data', data)
+                const newD = data.filter((item: any) => idArrToDel.indexOf(item.id) === -1)
+                console.log('newD', newD)
+                
+                return { beerListAll: [...newD] }
+            }),
+            filterBeerListAll: (idArrToDel: string[]) => set((state: BeerState) => ({ beerListAll: state.beerListAll.filter((beer: BeerItem) => idArrToDel.indexOf(beer.id) === -1 )})),
             })
     )   
 )
 
 window.store = useBeerStore 
-
-// export const useBeerStore: any = create<BeerState>()(
-//     devtools(
-//       persist(
-//         (set) => ({
-//             beerListAll: [],
-//             beerListRendered: [],
-//             setBeerList: (beersFromApi) => set((state) => ({ beerListAll: beersFromApi })),
-//             filterBeerList: (filter: string) => set((state) => ({ beerListRendered: state.beerListRendered.filter((beer: any) => beer.id !== filter) })),
-//             addToBeerListRendered: (newBeers) => set((state) => ({ beerListRendered: [...state.beerListRendered, ...newBeers] })),
-//         }),
-//         {
-//           name: 'beer-storage',
-//         }
-//       )
-//     )
-//   )
