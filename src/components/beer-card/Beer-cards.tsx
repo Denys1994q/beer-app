@@ -1,5 +1,3 @@
-import * as React from "react";
-import { useState, MouseEvent } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -33,7 +31,6 @@ const BeerCard = ({
 }: BeerCardProps): JSX.Element => {
     return (
         <div className={selected ? "beerCard beerCard-active" : "beerCard"}>
-            <h1>{id}</h1>
             <Card sx={{  display: "flex", flexDirection: "column", height: '100%' }}>
                 <Box sx={{ display: "flex",  }}>
                     <CardMedia

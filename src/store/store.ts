@@ -11,11 +11,10 @@ export interface BeerItem {
     description: string,
 }
 
-interface BeerState {
-    // всі товари, з яких фільтрується список для товарів, які потрапляють в рендер
+export interface BeerState {
     beerListAll: BeerItem[],
-    setBeerList: (beers: BeerItem[]) => void,
-    filterBeerListAll: (filter: string[]) => void,
+    setBeerList: (beers: BeerItem[]) => BeerItem[],
+    filterBeerListAll: (filter: string[]) => BeerItem[],
 }
 
   export const useBeerStore = create<BeerState>()( 
@@ -23,13 +22,9 @@ interface BeerState {
         (set: any) => ({
             beerListAll: [],
             setBeerList: (beersFromApi: BeerState[], idArrToDel?: any) => set((state: BeerState) => {
-                console.log('idArrToDel', idArrToDel)
                 const data = [...state.beerListAll, ...beersFromApi]
-                console.log('data', data)
-                const newD = data.filter((item: any) => idArrToDel.indexOf(item.id) === -1)
-                console.log('newD', newD)
-                
-                return { beerListAll: [...newD] }
+                const newData = data.filter((item: any) => idArrToDel.indexOf(item.id) === -1)
+                return { beerListAll: [...newData] }
             }),
             filterBeerListAll: (idArrToDel: string[]) => set((state: BeerState) => ({ beerListAll: state.beerListAll.filter((beer: BeerItem) => idArrToDel.indexOf(beer.id) === -1 )})),
             })
